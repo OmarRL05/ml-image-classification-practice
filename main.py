@@ -20,3 +20,7 @@ X_train, X_test, y_train, y_test = train_test_split(mnist.data, mnist.target, te
 
 perceptron_model = Perceptron(max_iter=5000, random_state=43) #Adjustable parameter max_iter
 perceptron_model.fit(X_train, y_train)
+
+y_pred = perceptron_model.predict(X_test)
+accuracy = f1_score(y_test, y_pred, average='micro')
+print(f"Accuracy: {accuracy:.2f}")
