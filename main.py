@@ -1,42 +1,36 @@
-#Imports
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.datasets import fetch_openml
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import Perceptron
-from sklearn.metrics import f1_score
-mnist = fetch_openml('mnist_784',  as_frame=False)
+#Local Imports
+from lecture import load_data
+from perceptron_ml import perceptron_start
 
-plt.figure(figsize=(20, 4))
-for index, img in zip(range(1, 9), mnist.data[:8]):
-    plt.subplot(1, 8, index)
-    plt.imshow(np.reshape(img, (28, 28)), cmap=plt.cm.gray)
-    plt.title(f'Image No.{index} . ')
-plt.show()
-print(mnist.target[:8])
+def main():
+    """
+    Main Function wich carry the data process & model training.
+    """
+    print("Loading MNIST Perceptron Project...")
 
-X_train, X_test, y_train, y_test = train_test_split(mnist.data, mnist.target, test_size=0.25, random_state=42)
+    #Loading Data
+    mnist_data = load_data()
+    #Training Model
+    X_test, y_test, y_pred = perceptron_start(mnist_data)
 
-perceptron_model = Perceptron(max_iter=5000, random_state=43) #Adjustable parameter max_iter
-perceptron_model.fit(X_train, y_train)
+    #Finding Errors
+    index = 0
+    index_errors = []
+    for label, predict in zip(y_test, y_pred):
+        if label != predict:
+            index_errors.append(index)
+        index += 1
 
-y_pred = perceptron_model.predict(X_test)
-accuracy = f1_score(y_test, y_pred, average='micro')
-print(f"Accuracy: {accuracy:.2f}")
+    #Showing Errors
+    plt.figure(figsize=(18, 4))
+    for i, img_i in zip(range(1, 6), index_errors[8:14]):
+        plt.subplot(1, 6, i)
+        plt.imshow(np.reshape(X_test[img_i], (28, 28)), cmap=plt.cm.gray)
+        plt.title("Origin: " + str(y_test[img_i]) + " Pred: " + str(y_pred[img_i]))
+    plt.show()
 
-index = 0
-index_errors = []
-
-for label, predict in zip(y_test, y_pred):
-    if label != predict:
-        index_errors.append(index)
-    index+=1
-
-plt.figure(figsize=(18, 4))
-
-for i, img_i in zip(range(1, 6), index_errors[8:14]):
-    plt.subplot(1, 6, i)
-    plt.imshow(np.reshape(X_test[img_i],(28, 28)), cmap=plt.cm.gray)
-    plt.title("Origin: " + str(y_test[img_i]) + " Pred: " + str(y_pred[img_i]))
-plt.show()
+# Execution Control
+if __name__ == "__main__":
+    main()
