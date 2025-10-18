@@ -17,3 +17,6 @@ plt.show()
 print(mnist.target[:8])
 
 X_train, X_test, y_train, y_test = train_test_split(mnist.data, mnist.target, test_size=0.25, random_state=42)
+
+perceptron_model = Perceptron(max_iter=5000, random_state=43) #Adjustable parameter max_iter
+perceptron_model.fit(X_train, y_train)
