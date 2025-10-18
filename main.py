@@ -24,3 +24,19 @@ perceptron_model.fit(X_train, y_train)
 y_pred = perceptron_model.predict(X_test)
 accuracy = f1_score(y_test, y_pred, average='micro')
 print(f"Accuracy: {accuracy:.2f}")
+
+index = 0
+index_errors = []
+
+for label, predict in zip(y_test, y_pred):
+    if label != predict:
+        index_errors.append(index)
+    index+=1
+
+plt.figure(figsize=(18, 4))
+
+for i, img_i in zip(range(1, 6), index_errors[8:14]):
+    plt.subplot(1, 6, i)
+    plt.imshow(np.reshape(X_test[img_i],(28, 28)), cmap=plt.cm.gray)
+    plt.title("Origin: " + str(y_test[img_i]) + " Pred: " + str(y_pred[img_i]))
+plt.show()
